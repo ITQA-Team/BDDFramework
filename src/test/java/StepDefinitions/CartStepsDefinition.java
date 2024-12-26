@@ -30,8 +30,6 @@ public class CartStepsDefinition {
 		addToCartButton.click();
 	}
 
-
-
 	@Then("User should navigate to the cart Page")
 	public void user_should_navigate_to_the_cart_page() {
 		driver.get("https://www.saucedemo.com/v1/cart.html");
@@ -43,8 +41,37 @@ public class CartStepsDefinition {
 		Assert.assertNotNull(cartItemName, item + " should be present in the cart.");
 	}
 
-	@And("Close the browser")
-	public void close_the_browser() {
-		driver.quit();
+	@When("Navigates to the cart Page")
+	public void navigates_to_the_cart_page() {
+		driver.get("https://www.saucedemo.com/v1/cart.html");
 	}
+
+	@When("Clicks on the Remove from cart button for {string}")
+	public void clicks_on_the_remove_from_cart_button_for(String item) {
+		WebElement removeButton = driver.findElement(By.xpath("//div[@class='cart_item']//div[text()='" + item + "']/ancestor::div[@class='cart_item']//button[text()='REMOVE']"));
+		removeButton.click();
+	}
+
+	@Then("{string} should not be present in the cart")
+	public void should_not_be_present_in_the_cart(String item) {
+		Assert.assertEquals(0, driver.findElements(By.xpath("//div[@class='inventory_item_name' and text()='" + item + "']")).size(),
+				item + " should not be present in the cart.");
+	}
+
+	@When("Clicks on the Checkout button")
+	public void clicks_on_the_checkout_button() {
+		WebElement checkoutButton = driver.findElement(By.xpath("//div[@class='cart_footer']//a[text()='CHECKOUT']"));
+		checkoutButton.click();
+	}
+
+	@Then("User should navigate to the Checkout Page")
+	public void user_should_navigate_to_the_checkout_page() {
+		driver.get("https://www.saucedemo.com/v1/checkout-step-one.html");
+	}
+
+
+//	@And("Close the browser")
+//	public void close_the_browser() {
+//		driver.quit();
+//	}
 }

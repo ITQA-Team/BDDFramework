@@ -50,8 +50,8 @@ public class LoginStepsDefinition {
 		Assert.assertTrue(errorMessage.contains("Epic sadface"), "Error message not displayed as expected.");
 	}
 
-//	@And("Close the browser")
-//	public void close_the_browser() {
-//		driver.close();
-//	}
+	@And("Close the browser")
+	public void close_the_browser() {
+		driver.close();
+	}
 }

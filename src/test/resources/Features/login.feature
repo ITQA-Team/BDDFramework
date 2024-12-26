@@ -5,7 +5,7 @@ Feature: Login page Automation of saucedemo App
     When User enters a valid "<username>" and "<password>"
     And Clicks on the Login button
     Then User should be navigated to the Home Page
-#    And Close the browser
+    And Close the browser
 
     Examples:
       | username | password |
@@ -14,13 +14,13 @@ Feature: Login page Automation of saucedemo App
       | problem_user | secret_sauce |
       | performance_glitch_user | secret_sauce |
 #
-#//Tehan test case 01
+#//Tehan-invalid password check
   Scenario Outline: Check login fails with invalid password
     Given User is on the login page
     When User enters a valid "<username>" and an invalid "<password>"
     And Clicks on the Login button
     Then User should see an error message
-#    And Close the browser
+    And Close the browser
 
     Examples:
       | username             | password        |
