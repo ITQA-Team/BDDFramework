@@ -60,8 +60,8 @@ public class LoginStepsDefinition {
 	}*/
 
 
-	@And("Close the browser")
+	/*@And("Close the browser")
 	public void close_the_browser() {
 	    driver.close();
-	}
+	}*/
 }
