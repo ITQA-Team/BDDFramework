@@ -57,11 +57,11 @@ public class LoginStepsDefinition {
 	public void user_should_see_an_error_message() {
 	    String errorMessage = driver.findElement(By.cssSelector("[data-test='error']")).getText();
 	    Assert.assertTrue(errorMessage.contains("Epic sadface"), "Error message not displayed as expected.");
-	}*/
+	} */ 
 
 
-	/*@And("Close the browser")
+	@And("Close the browser")
 	public void close_the_browser() {
 	    driver.close();
-	}*/
+	}
 }

@@ -27,20 +27,37 @@ public class SideMenuStepsDefinition {
 
     @When("User clicks on the Open Menu button")
     public void user_clicks_on_the_open_menu_button() {
-        WebElement openMenuButton = driver.findElement(By.xpath("//button[text()='Open Menu']"));
+    	 WebElement openMenuButton = driver.findElement(By.cssSelector(".bm-burger-button button"));
         openMenuButton.click();
     }
 
     @Then("Side menu should be visible")
     public void side_menu_should_be_visible() {
-        WebElement menu = driver.findElement(By.className("bm-menu"));
+    	WebElement menu = driver.findElement(By.cssSelector(".bm-menu-wrap"));
         Assert.assertTrue(menu.isDisplayed(), "Side menu should be visible.");
     }
 
     @When("User clicks on {string} menu item")
     public void user_clicks_on_menu_item(String menuItem) {
-        WebElement menuOption = driver.findElement(By.xpath("//a[text()='" + menuItem + "']"));
-        menuOption.click();
+    	 String menuItemId;
+    	    switch (menuItem) {
+    	        case "All Items":
+    	            menuItemId = "inventory_sidebar_link";
+    	            break;
+    	        case "About":
+    	            menuItemId = "about_sidebar_link";
+    	            break;
+    	        case "Logout":
+    	            menuItemId = "logout_sidebar_link";
+    	            break;
+    	        case "Reset App State":
+    	            menuItemId = "reset_sidebar_link";
+    	            break;
+    	        default:
+    	            throw new IllegalArgumentException("Invalid menu item: " + menuItem);
+    	    }
+    	    WebElement menuOption = driver.findElement(By.id(menuItemId));
+    	    menuOption.click();
     }
 
     @Then("User should be redirected to the {string} page")
@@ -57,13 +74,13 @@ public class SideMenuStepsDefinition {
 
     @When("User clicks on the Close Menu button")
     public void user_clicks_on_the_close_menu_button() {
-        WebElement closeMenuButton = driver.findElement(By.xpath("//button[text()='Close Menu']"));
+    	WebElement closeMenuButton = driver.findElement(By.cssSelector(".bm-cross-button button"));
         closeMenuButton.click();
     }
 
     @Then("Side menu should be closed")
     public void side_menu_should_be_closed() {
-        WebElement menu = driver.findElement(By.className("bm-menu"));
+    	WebElement menu = driver.findElement(By.cssSelector(".bm-menu-wrap"));
         Assert.assertFalse(menu.isDisplayed(), "Side menu should be closed.");
     }
 
