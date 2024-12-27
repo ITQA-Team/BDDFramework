@@ -38,3 +38,14 @@ Feature: Cart Functionality
     Examples:
       | item                |
       | Sauce Labs Backpack |
+
+    #  //Malinsha - item description page
+  Scenario Outline: Verify that clicking on the item's image redirects to the same detailed page
+    Given User is on the home page
+    When User clicks on the image of "<item>"
+    Then User should be redirected to the detailed page of "<item>"
+
+    Examples:
+      | item                |
+      | Sauce Labs Backpack |
+
