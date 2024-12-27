@@ -13,6 +13,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.time.Duration;
+import java.util.List;
 
 public class CartStepsDefinition {
 	static WebDriver driver;
@@ -81,11 +82,13 @@ public class CartStepsDefinition {
 
 	@Then("User should be redirected to the detailed page of {string}")
 	public void userShouldBeRedirectedToTheDetailedPageOf(String item) {
-		String expectedItemId = getItemIdFromName(item);
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.urlContains("inventory-item.html"));
 		String currentUrl = driver.getCurrentUrl();
 		String actualItemId = getItemIdFromUrl(currentUrl);
-		Assert.assertEquals(actualItemId, expectedItemId, "User is not on the correct detailed page.");
+		WebElement itemNameElement = driver.findElement(By.xpath("//div[contains(@class, 'inventory_details_name') and text()='" + item + "']"));
+		Assert.assertNotNull(itemNameElement, "The detailed page does not display the correct item name: " + item);
+		Assert.assertFalse(actualItemId.isEmpty(), "Item ID is missing in the URL.");
 	}
 
 	private String getItemIdFromUrl(String url) {
@@ -96,31 +99,20 @@ public class CartStepsDefinition {
 		return "";
 	}
 
-
-	private String getItemIdFromName(String itemName) {
-
-		if (itemName.equalsIgnoreCase("Sauce Labs Backpack")) {
-			return "4"; // Item ID for "Sauce Labs Backpack"
-		}
-		return "";
-	}
-
 	@When("User clicks on the item name of {string}")
-	public void userClicksOnTheItemNameOf(String item) {
-		// Locate the item name and click on it
-		WebElement itemName = driver.findElement(By.xpath("//div[@class='inventory_item']//div[contains(text(),'" + item + "')]/ancestor::div[@class='inventory_item']//div[@class='inventory_item_name']"));
-		itemName.click();
+	public void user_clicks_on_the_item_name_of(String itemName) {
+		WebElement itemLink = driver.findElement(By.xpath("//div[@class='inventory_item_name' and text()='" + itemName + "']"));
+		itemLink.click();
 	}
 
 	@Then("User should be redirected to the detailed description page of {string}")
-	public void userShouldBeRedirectedToTheDetailedDescriptionPageOf(String item) {
-		String expectedItemId = getItemIdFromName(item);
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-		wait.until(ExpectedConditions.urlContains("inventory-item.html"));
+	public void user_should_be_redirected_to_the_detailed_description_page_of(String itemName) {
 		String currentUrl = driver.getCurrentUrl();
-		String actualItemId = getItemIdFromUrl(currentUrl);
-		Assert.assertEquals(actualItemId, expectedItemId, "User is not on the correct detailed description page.");
+		Assert.assertTrue(currentUrl.contains("inventory-item.html"), "User is not on the detailed description page.");
+		WebElement itemDescription = driver.findElement(By.xpath("//div[contains(@class, 'inventory_details_name') and text()='" + itemName + "']"));
+		Assert.assertNotNull(itemDescription, "The detailed page does not show the correct item: " + itemName);
 	}
+
 
 
 //	@And("Close the browser")
