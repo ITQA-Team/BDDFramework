@@ -75,49 +75,53 @@ public class CartStepsDefinition {
 
 	@When("User clicks on the image of {string}")
 	public void userClickOnTheImageOf(String item) {
-		// Click on the image of the item
 		WebElement itemImage = driver.findElement(By.xpath("//div[@class='inventory_item']//div[contains(text(),'" + item + "')]/ancestor::div[@class='inventory_item']//img"));
 		itemImage.click();
 	}
 
 	@Then("User should be redirected to the detailed page of {string}")
 	public void userShouldBeRedirectedToTheDetailedPageOf(String item) {
-		// Get the expected item ID based on the item name
 		String expectedItemId = getItemIdFromName(item);
-
-		// Wait for the page to load
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-		wait.until(ExpectedConditions.urlContains("inventory-item.html"));
-
-		// Get the current URL
 		String currentUrl = driver.getCurrentUrl();
-
-		// Extract the 'id' parameter from the URL
 		String actualItemId = getItemIdFromUrl(currentUrl);
-
-		// Assert that the 'id' in the URL matches the expected item ID
 		Assert.assertEquals(actualItemId, expectedItemId, "User is not on the correct detailed page.");
 	}
 
-	// Helper method to extract 'id' from the URL
 	private String getItemIdFromUrl(String url) {
 		String[] urlParts = url.split("\\?id=");
 		if (urlParts.length > 1) {
-			return urlParts[1]; // Return the ID after '?id='
+			return urlParts[1];
 		}
 		return "";
 	}
 
-	// Helper method to map item name to item ID
+
 	private String getItemIdFromName(String itemName) {
-		// Implement a mapping from item name to item ID.
-		// Example:
+
 		if (itemName.equalsIgnoreCase("Sauce Labs Backpack")) {
 			return "4"; // Item ID for "Sauce Labs Backpack"
 		}
-		// Add other items and their corresponding IDs as needed
 		return "";
 	}
+
+	@When("User clicks on the item name of {string}")
+	public void userClicksOnTheItemNameOf(String item) {
+		// Locate the item name and click on it
+		WebElement itemName = driver.findElement(By.xpath("//div[@class='inventory_item']//div[contains(text(),'" + item + "')]/ancestor::div[@class='inventory_item']//div[@class='inventory_item_name']"));
+		itemName.click();
+	}
+
+	@Then("User should be redirected to the detailed description page of {string}")
+	public void userShouldBeRedirectedToTheDetailedDescriptionPageOf(String item) {
+		String expectedItemId = getItemIdFromName(item);
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.urlContains("inventory-item.html"));
+		String currentUrl = driver.getCurrentUrl();
+		String actualItemId = getItemIdFromUrl(currentUrl);
+		Assert.assertEquals(actualItemId, expectedItemId, "User is not on the correct detailed description page.");
+	}
+
 
 //	@And("Close the browser")
 //	public void close_the_browser() {
