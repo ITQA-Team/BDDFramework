@@ -4,11 +4,16 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+import java.time.Duration;
+import java.util.List;
 
 public class CartStepsDefinition {
 	static WebDriver driver;
@@ -68,6 +73,46 @@ public class CartStepsDefinition {
 	public void user_should_navigate_to_the_checkout_page() {
 		driver.get("https://www.saucedemo.com/v1/checkout-step-one.html");
 	}
+
+	@When("User clicks on the image of {string}")
+	public void userClickOnTheImageOf(String item) {
+		WebElement itemImage = driver.findElement(By.xpath("//div[@class='inventory_item']//div[contains(text(),'" + item + "')]/ancestor::div[@class='inventory_item']//img"));
+		itemImage.click();
+	}
+
+	@Then("User should be redirected to the detailed page of {string}")
+	public void userShouldBeRedirectedToTheDetailedPageOf(String item) {
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.urlContains("inventory-item.html"));
+		String currentUrl = driver.getCurrentUrl();
+		String actualItemId = getItemIdFromUrl(currentUrl);
+		WebElement itemNameElement = driver.findElement(By.xpath("//div[contains(@class, 'inventory_details_name') and text()='" + item + "']"));
+		Assert.assertNotNull(itemNameElement, "The detailed page does not display the correct item name: " + item);
+		Assert.assertFalse(actualItemId.isEmpty(), "Item ID is missing in the URL.");
+	}
+
+	private String getItemIdFromUrl(String url) {
+		String[] urlParts = url.split("\\?id=");
+		if (urlParts.length > 1) {
+			return urlParts[1];
+		}
+		return "";
+	}
+
+	@When("User clicks on the item name of {string}")
+	public void user_clicks_on_the_item_name_of(String itemName) {
+		WebElement itemLink = driver.findElement(By.xpath("//div[@class='inventory_item_name' and text()='" + itemName + "']"));
+		itemLink.click();
+	}
+
+	@Then("User should be redirected to the detailed description page of {string}")
+	public void user_should_be_redirected_to_the_detailed_description_page_of(String itemName) {
+		String currentUrl = driver.getCurrentUrl();
+		Assert.assertTrue(currentUrl.contains("inventory-item.html"), "User is not on the detailed description page.");
+		WebElement itemDescription = driver.findElement(By.xpath("//div[contains(@class, 'inventory_details_name') and text()='" + itemName + "']"));
+		Assert.assertNotNull(itemDescription, "The detailed page does not show the correct item: " + itemName);
+	}
+
 
 
 //	@And("Close the browser")
